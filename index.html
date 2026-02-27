@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MenuMaker - Create Digital Menus</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; background: #0f0f0f; color: #fff; min-height: 100vh; padding: 20px; }
+        .container { max-width: 700px; margin: 0 auto; }
+        
+        header { text-align: center; margin-bottom: 30px; }
+        h1 { font-size: 2.5rem; font-weight: 700; margin-bottom: 8px; }
+        .tagline { color: #888; font-size: 1rem; }
+        .brand { color: #f59e0b; }
+        
+        .pro-banner { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: #000; padding: 12px 20px; border-radius: 12px; margin-bottom: 24px; text-align: center; font-weight: 600; }
+        .pro-banner a { color: #000; text-decoration: underline; }
+        
+        .section { background: #1a1a1a; border-radius: 16px; padding: 24px; margin-bottom: 20px; }
+        .section h2 { font-size: 1.1rem; color: #f59e0b; margin-bottom: 16px; font-weight: 600; }
+        
+        .field { margin-bottom: 16px; }
+        label { display: block; font-size: 0.85rem; color: #888; margin-bottom: 6px; font-weight: 500; }
+        input, textarea, select { width: 100%; padding: 12px 16px; background: #252525; border: 1px solid #333; border-radius: 10px; color: #fff; font-size: 1rem; font-family: inherit; }
+        input:focus, textarea:focus, select:focus { outline: none; border-color: #f59e0b; }
+        
+        /* Menu Items */
+        .category { margin-bottom: 24px; }
+        .category-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .category-title { font-size: 1.2rem; font-weight: 600; color: #f59e0b; }
+        
+        .menu-items { margin-left: 16px; }
+        .menu-item { background: #252525; border-radius: 10px; padding: 16px; margin-bottom: 10px; }
+        .menu-item-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+        .menu-item-name { font-weight: 600; font-size: 1.05rem; }
+        .menu-item-price { color: #f59e0b; font-weight: 700; font-size: 1.1rem; }
+        .menu-item-desc { color: #888; font-size: 0.9rem; }
+        
+        .btn { padding: 10px 20px; border: none; border-radius: 8px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+        .btn-sm { padding: 6px 12px; font-size: 0.8rem; }
+        .btn-add { background: #252525; color: #f59e0b; border: 1px dashed #f59e0b; }
+        .btn-add:hover { background: #f59e0b; color: #000; }
+        .btn-remove { background: #ff4444; color: #fff; }
+        .btn-primary { background: #f59e0b; color: #000; width: 100%; margin-top: 20px; }
+        .btn-primary:hover { background: #d97706; }
+        
+        /* Preview */
+        .menu-preview { display: none; }
+        .menu-preview.visible { display: block; }
+        
+        .preview-menu { background: #fff; color: #000; border-radius: 16px; padding: 30px; }
+        .preview-menu h2 { color: #000; font-size: 1.8rem; text-align: center; margin-bottom: 8px; }
+        .preview-menu .preview-subtitle { text-align: center; color: #666; margin-bottom: 30px; }
+        
+        .preview-category { margin-bottom: 30px; }
+        .preview-category h3 { font-size: 1.3rem; border-bottom: 2px solid #f59e0b; padding-bottom: 8px; margin-bottom: 16px; }
+        
+        .preview-item { display: flex; justify-content: space-between; margin-bottom: 12px; }
+        .preview-item-name { font-weight: 600; }
+        .preview-item-price { font-weight: 700; color: #f59e0b; }
+        .preview-item-desc { color: #666; font-size: 0.9rem; font-style: italic; margin-top: 2px; }
+        
+        .preview-actions { display: flex; gap: 10px; margin-top: 20px; justify-content: center; }
+        .btn-preview { background: #333; color: #fff; }
+        
+        /* Theme Selector */
+        .themes { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+        .theme { width: 60px; height: 40px; border-radius: 6px; cursor: pointer; border: 2px solid transparent; }
+        .theme.selected { border-color: #f59e0b; }
+        
+        .toast { position: fixed; bottom: 20px; right: 20px; background: #f59e0b; color: #000; padding: 12px 24px; border-radius: 10px; font-weight: 600; transform: translateY(100px); opacity: 0; transition: all 0.3s; }
+        .toast.show { transform: translateY(0); opacity: 1; }
+        
+        footer { text-align: center; padding: 20px; color: #666; font-size: 0.85rem; }
+        footer a { color: #f59e0b; text-decoration: none; }
+        
+        /* Themes CSS */
+        .theme-light { background: #fff; color: #000; }
+        .theme-dark { background: #1a1a1a; color: #fff; }
+        .theme-coffee { background: #3d2914; color: #f5deb3; }
+        .theme-ocean { background: #0a2342; color: #e0f2fe; }
+        .theme-forest { background: #1a2e1a; color: #86efac; }
+        .theme-sunset { background: #2d1f1f; color: #fcd34d; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🍽️ MenuMaker</h1>
+            <p class="tagline">Create beautiful digital menus for your restaurant. <span class="brand">Free:</span> 1 menu, 10 items</p>
+        </header>
+        
+        <div class="pro-banner">
+            🚀 Pro: $3/month — Unlimited items, photos, custom background, remove branding → 
+            <a href="https://buy.stripe.com/28E9AReBzeX65MX5uE8EM01" target="_blank">Upgrade</a>
+        </div>
+        
+        <form id="menuForm">
+            <div class="section">
+                <h2>Restaurant Info</h2>
+                <div class="field">
+                    <label>Restaurant Name</label>
+                    <input type="text" id="restaurantName" placeholder="Joe's Pizza">
+                </div>
+                <div class="field">
+                    <label>Tagline (optional)</label>
+                    <input type="text" id="tagline" placeholder="Authentic Italian Pizza">
+                </div>
+                <div class="field">
+                    <label>Theme</label>
+                    <div class="themes">
+                        <div class="theme theme-light selected" data-theme="light" onclick="selectTheme(this)"></div>
+                        <div class="theme theme-dark" data-theme="dark" onclick="selectTheme(this)"></div>
+                        <div class="theme theme-coffee" data-theme="coffee" onclick="selectTheme(this)"></div>
+                        <div class="theme theme-ocean" data-theme="ocean" onclick="selectTheme(this)"></div>
+                        <div class="theme theme-forest" data-theme="forest" onclick="selectTheme(this)"></div>
+                        <div class="theme theme-sunset" data-theme="sunset" onclick="selectTheme(this)"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section" id="categoriesSection">
+                <h2>Menu Categories & Items</h2>
+                <div id="categories">
+                    <div class="category" data-cat="0">
+                        <div class="category-header">
+                            <input type="text" class="category-title-input" placeholder="Category Name" value="Appetizers" style="font-weight: 600; font-size: 1.1rem; width: 200px;">
+                            <button type="button" class="btn btn-remove btn-sm" onclick="removeCategory(this)">Remove</button>
+                        </div>
+                        <div class="menu-items" id="cat-0-items">
+                            <div class="menu-item">
+                                <div class="menu-item-header">
+                                    <input type="text" class="menu-item-name" placeholder="Item Name" value="Bruschetta">
+                                    <input type="text" class="menu-item-price" placeholder="$0.00" value="$8.00" style="width: 80px; text-align: right;">
+                                </div>
+                                <input type="text" class="menu-item-desc" placeholder="Description (optional)" value="Toasted bread with fresh tomatoes and basil">
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-add btn-sm" onclick="addMenuItem(0)">+ Add Item</button>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-add" onclick="addCategory()">+ Add Category</button>
+            </div>
+            
+            <button type="button" class="btn btn-primary" onclick="generateMenu()">Generate Menu</button>
+        </form>
+        
+        <div class="menu-preview" id="menuPreview">
+            <div class="preview-menu" id="previewContent">
+                <!-- Preview rendered here -->
+            </div>
+            <div class="preview-actions">
+                <button class="btn btn-preview" onclick="shareMenuLink()">🔗 Copy Link</button>
+                <button class="btn btn-preview" onclick="window.print()">📄 Print</button>
+            </div>
+            <p style="text-align: center; margin-top: 20px; color: #666; font-size: 0.85rem;">Created with MenuMaker</p>
+        </div>
+        
+        <footer>
+            <p>Built by <a href="https://tcby04.github.io/curtis-tech/" target="_blank">Curtis Tech</a></p>
+        </footer>
+    </div>
+    
+    <div class="toast" id="toast">Link copied!</div>
+    
+    <script>
+        let selectedTheme = 'light';
+        
+        // Load from URL
+        const params = new URLSearchParams(window.location.search);
+        if (params.has('menu')) {
+            showSharedMenu(params.get('menu'));
+        }
+        
+        function selectTheme(el) {
+            document.querySelectorAll('.theme').forEach(t => t.classList.remove('selected'));
+            el.classList.add('selected');
+            selectedTheme = el.dataset.theme;
+        }
+        
+        function addCategory() {
+            const id = Date.now();
+            const div = document.createElement('div');
+            div.className = 'category';
+            div.dataset.cat = id;
+            div.innerHTML = `
+                <div class="category-header">
+                    <input type="text" class="category-title-input" placeholder="Category Name" style="font-weight: 600; font-size: 1.1rem; width: 200px;">
+                    <button type="button" class="btn btn-remove btn-sm" onclick="removeCategory(this)">Remove</button>
+                </div>
+                <div class="menu-items" id="cat-${id}-items">
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <input type="text" class="menu-item-name" placeholder="Item Name">
+                            <input type="text" class="menu-item-price" placeholder="$0.00" style="width: 80px; text-align: right;">
+                        </div>
+                        <input type="text" class="menu-item-desc" placeholder="Description (optional)">
+                    </div>
+                </div>
+                <button type="button" class="btn btn-add btn-sm" onclick="addMenuItem(${id})">+ Add Item</button>
+            `;
+            document.getElementById('categories').appendChild(div);
+        }
+        
+        function removeCategory(btn) {
+            if (document.querySelectorAll('.category').length > 1) {
+                btn.closest('.category').remove();
+            }
+        }
+        
+        function addMenuItem(catId) {
+            const container = document.getElementById(`cat-${catId}-items`) || document.querySelector(`[data-cat="${catId}"] .menu-items`);
+            const div = document.createElement('div');
+            div.className = 'menu-item';
+            div.innerHTML = `
+                <div class="menu-item-header">
+                    <input type="text" class="menu-item-name" placeholder="Item Name">
+                    <input type="text" class="menu-item-price" placeholder="$0.00" style="width: 80px; text-align: right;">
+                </div>
+                <input type="text" class="menu-item-desc" placeholder="Description (optional)">
+            `;
+            container.appendChild(div);
+        }
+        
+        function generateMenu() {
+            const name = document.getElementById('restaurantName').value || 'My Restaurant';
+            const tagline = document.getElementById('tagline').value;
+            
+            const categories = [];
+            document.querySelectorAll('.category').forEach(cat => {
+                const catName = cat.querySelector('.category-title-input').value;
+                const items = [];
+                cat.querySelectorAll('.menu-item').forEach(item => {
+                    const itemName = item.querySelector('.menu-item-name').value;
+                    const itemPrice = item.querySelector('.menu-item-price').value;
+                    const itemDesc = item.querySelector('.menu-item-desc').value;
+                    if (itemName) items.push({ name: itemName, price: itemPrice, desc: itemDesc });
+                });
+                if (catName && items.length) categories.push({ name: catName, items });
+            });
+            
+            const menuData = { name, tagline, theme: selectedTheme, categories };
+            
+            const themeColors = {
+                light: { bg: '#fff', text: '#000', accent: '#f59e0b' },
+                dark: { bg: '#1a1a1a', text: '#fff', accent: '#f59e0b' },
+                coffee: { bg: '#3d2914', text: '#f5deb3', accent: '#d4a574' },
+                ocean: { bg: '#0a2342', text: '#e0f2fe', accent: '#38bdf8' },
+                forest: { bg: '#1a2e1a', text: '#86efac', accent: '#4ade80' },
+                sunset: { bg: '#2d1f1f', text: '#fcd34d', accent: '#f97316' }
+            };
+            const colors = themeColors[selectedTheme];
+            
+            const html = `
+                <h2>${name}</h2>
+                ${tagline ? `<p class="preview-subtitle">${tagline}</p>` : ''}
+                ${categories.map(cat => `
+                    <div class="preview-category">
+                        <h3>${cat.name}</h3>
+                        ${cat.items.map(item => `
+                            <div class="preview-item">
+                                <div>
+                                    <div class="preview-item-name">${item.name}</div>
+                                    ${item.desc ? `<div class="preview-item-desc">${item.desc}</div>` : ''}
+                                </div>
+                                <div class="preview-item-price">${item.price}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `).join('')}
+            `;
+            
+            const preview = document.getElementById('previewContent');
+            preview.innerHTML = html;
+            preview.style.background = colors.bg;
+            preview.style.color = colors.text;
+            preview.querySelectorAll('h3').forEach(h => h.style.borderColor = colors.accent);
+            preview.querySelectorAll('.preview-item-price').forEach(p => p.style.color = colors.accent);
+            
+            document.getElementById('menuPreview').classList.add('visible');
+            document.getElementById('menuPreview').scrollIntoView({ behavior: 'smooth' });
+            
+            // Save to localStorage
+            localStorage.setItem('menuMakerLast', JSON.stringify(menuData));
+        }
+        
+        function shareMenuLink() {
+            const name = document.getElementById('restaurantName').value || 'My Restaurant';
+            const tagline = document.getElementById('tagline').value;
+            
+            const categories = [];
+            document.querySelectorAll('.category').forEach(cat => {
+                const catName = cat.querySelector('.category-title-input').value;
+                const items = [];
+                cat.querySelectorAll('.menu-item').forEach(item => {
+                    const itemName = item.querySelector('.menu-item-name').value;
+                    const itemPrice = item.querySelector('.menu-item-price').value;
+                    const itemDesc = item.querySelector('.menu-item-desc').value;
+                    if (itemName) items.push({ name: itemName, price: itemPrice, desc: itemDesc });
+                });
+                if (catName && items.length) categories.push({ name: catName, items });
+            });
+            
+            const menuData = { name, tagline, theme: selectedTheme, categories };
+            const encoded = btoa(JSON.stringify(menuData));
+            const url = window.location.origin + window.location.pathname + '?menu=' + encoded;
+            
+            navigator.clipboard.writeText(url).then(() => showToast('Link copied!'));
+        }
+        
+        function showSharedMenu(encoded) {
+            try {
+                const data = JSON.parse(atob(encoded));
+                const themeColors = {
+                    light: { bg: '#fff', text: '#000', accent: '#f59e0b' },
+                    dark: { bg: '#1a1a1a', text: '#fff', accent: '#f59e0b' },
+                    coffee: { bg: '#3d2914', text: '#f5deb3', accent: '#d4a574' },
+                    ocean: { bg: '#0a2342', text: '#e0f2fe', accent: '#38bdf8' },
+                    forest: { bg: '#1a2e1a', text: '#86efac', accent: '#4ade80' },
+                    sunset: { bg: '#2d1f1f', text: '#fcd34d', accent: '#f97316' }
+                };
+                const colors = themeColors[data.theme] || themeColors.light;
+                
+                document.body.innerHTML = `
+                    <div class="container">
+                        <div class="menu-preview visible" style="display: block;">
+                            <div class="preview-menu" style="background: ${colors.bg}; color: ${colors.text};">
+                                <h2>${data.name}</h2>
+                                ${data.tagline ? `<p class="preview-subtitle">${data.tagline}</p>` : ''}
+                                ${data.categories.map(cat => `
+                                    <div class="preview-category">
+                                        <h3 style="border-color: ${colors.accent};">${cat.name}</h3>
+                                        ${cat.items.map(item => `
+                                            <div class="preview-item">
+                                                <div>
+                                                    <div class="preview-item-name">${item.name}</div>
+                                                    ${item.desc ? `<div class="preview-item-desc">${item.desc}</div>` : ''}
+                                                </div>
+                                                <div class="preview-item-price" style="color: ${colors.accent};">${item.price}</div>
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <p style="text-align: center; margin-top: 20px; color: #666; font-size: 0.85rem;">Created with MenuMaker</p>
+                        </div>
+                    </div>
+                `;
+            } catch(e) {
+                alert('Invalid menu link');
+            }
+        }
+        
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 2000);
+        }
+    </script>
+</body>
+</html>
