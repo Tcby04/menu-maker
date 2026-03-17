@@ -4,11 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MenuMaker - Create Digital Menus</title>
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="MenuMaker - Digital Menus for Food Trucks">
+    <meta property="og:description" content="Create beautiful digital menus for your food truck. Customers scan a QR code to view your menu on their phone.">
+    <meta property="og:image" content="https://tcby04.github.io/menu-maker/og-image.png">
+    <meta name="twitter:card" content="summary_large_image">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Inter', sans-serif; background: #0f0f0f; color: #fff; min-height: 100vh; padding: 20px; }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: #0f0f0f; color: #fff; min-height: 100vh; padding: 20px; line-height: 1.5; }
         .container { max-width: 700px; margin: 0 auto; }
         
         header { text-align: center; margin-bottom: 30px; }
@@ -16,128 +25,158 @@
         .tagline { color: #888; font-size: 1rem; }
         .brand { color: #f59e0b; }
         
-        .pro-banner { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: #000; padding: 12px 20px; border-radius: 12px; margin-bottom: 24px; text-align: center; font-weight: 600; }
-        .pro-banner a { color: #000; text-decoration: underline; }
+        .pro-banner { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: #000; padding: 12px 20px; border-radius: 12px; margin-bottom: 24px; text-align: center; font-weight: 600; cursor: pointer; transition: transform 0.2s; }
+        .pro-banner:hover { transform: scale(1.02); }
         
         .section { background: #1a1a1a; border-radius: 16px; padding: 24px; margin-bottom: 20px; }
         .section h2 { font-size: 1.1rem; color: #f59e0b; margin-bottom: 16px; font-weight: 600; }
         
         .field { margin-bottom: 16px; }
         label { display: block; font-size: 0.85rem; color: #888; margin-bottom: 6px; font-weight: 500; }
-        input, textarea, select { width: 100%; padding: 12px 16px; background: #252525; border: 1px solid #333; border-radius: 10px; color: #fff; font-size: 1rem; font-family: inherit; }
+        input, textarea, select { width: 100%; padding: 12px 16px; background: #252525; border: 1px solid #333; border-radius: 10px; color: #fff; font-size: 1rem; font-family: inherit; transition: border-color 0.2s; }
         input:focus, textarea:focus, select:focus { outline: none; border-color: #f59e0b; }
+        input::placeholder, textarea::placeholder { color: #555; }
         
-        /* Menu Items */
-        .category { margin-bottom: 24px; }
-        .category-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .category-title { font-size: 1.2rem; font-weight: 600; color: #f59e0b; }
+        .category { margin-bottom: 24px; background: #202020; border-radius: 12px; padding: 16px; }
+        .category-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap: 10px; }
+        .category-title-input { flex: 1; font-weight: 600; font-size: 1.1rem; }
         
-        .menu-items { margin-left: 16px; }
-        .menu-item { background: #252525; border-radius: 10px; padding: 16px; margin-bottom: 10px; }
-        .menu-item-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
-        .menu-item-name { font-weight: 600; font-size: 1.05rem; }
-        .menu-item-price { color: #f59e0b; font-weight: 700; font-size: 1.1rem; }
-        .menu-item-desc { color: #888; font-size: 0.9rem; }
+        .menu-items { margin-left: 0; }
+        .menu-item { background: #252525; border-radius: 10px; padding: 16px; margin-bottom: 10px; border: 1px solid #333; }
+        .menu-item-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; gap: 10px; }
+        .menu-item-name { flex: 1; font-weight: 600; font-size: 1.05rem; }
+        .menu-item-price { width: 90px; text-align: right; font-weight: 700; }
+        .menu-item-desc { font-size: 0.9rem; }
         
-        .btn { padding: 10px 20px; border: none; border-radius: 8px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit; }
-        .btn-sm { padding: 6px 12px; font-size: 0.8rem; }
-        .btn-add { background: #252525; color: #f59e0b; border: 1px dashed #f59e0b; }
+        .btn { padding: 12px 20px; border: none; border-radius: 10px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-sm { padding: 8px 14px; font-size: 0.85rem; }
+        .btn-add { background: transparent; color: #f59e0b; border: 1px dashed #f59e0b; }
         .btn-add:hover { background: #f59e0b; color: #000; }
-        .btn-remove { background: #ff4444; color: #fff; }
-        .btn-primary { background: #f59e0b; color: #000; width: 100%; margin-top: 20px; }
-        .btn-primary:hover { background: #d97706; }
+        .btn-remove { background: #dc2626; color: #fff; }
+        .btn-remove:hover { background: #b91c1c; }
+        .btn-primary { background: #f59e0b; color: #000; width: 100%; margin-top: 20px; font-size: 1.1rem; padding: 16px; }
+        .btn-primary:hover { background: #d97706; transform: translateY(-1px); }
         
-        /* Preview */
         .menu-preview { display: none; }
-        .menu-preview.visible { display: block; }
+        .menu-preview.visible { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        .preview-menu { background: #fff; color: #000; border-radius: 16px; padding: 30px; }
-        .preview-menu h2 { color: #000; font-size: 1.8rem; text-align: center; margin-bottom: 8px; }
-        .preview-menu .preview-subtitle { text-align: center; color: #666; margin-bottom: 30px; }
+        .preview-menu { background: #fff; color: #000; border-radius: 16px; padding: 24px; }
+        .preview-menu h2 { color: #000; font-size: 1.6rem; text-align: center; margin-bottom: 6px; }
+        .preview-menu .preview-subtitle { text-align: center; color: #666; margin-bottom: 24px; font-size: 0.95rem; }
         
-        .preview-category { margin-bottom: 30px; }
-        .preview-category h3 { font-size: 1.3rem; border-bottom: 2px solid #f59e0b; padding-bottom: 8px; margin-bottom: 16px; }
+        .preview-category { margin-bottom: 24px; }
+        .preview-category h3 { font-size: 1.2rem; border-bottom: 2px solid #f59e0b; padding-bottom: 8px; margin-bottom: 14px; }
         
-        .preview-item { display: flex; justify-content: space-between; margin-bottom: 12px; }
+        .preview-item { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; gap: 16px; }
         .preview-item-name { font-weight: 600; }
-        .preview-item-price { font-weight: 700; color: #f59e0b; }
-        .preview-item-desc { color: #666; font-size: 0.9rem; font-style: italic; margin-top: 2px; }
+        .preview-item-price { font-weight: 700; white-space: nowrap; }
+        .preview-item-desc { color: #666; font-size: 0.9rem; font-style: italic; }
         
-        .preview-actions { display: flex; gap: 10px; margin-top: 20px; justify-content: center; }
-        .btn-preview { background: #333; color: #fff; }
+        .preview-actions { display: flex; gap: 12px; margin-top: 20px; flex-wrap: wrap; justify-content: center; }
+        .btn-preview { background: #333; color: #fff; flex: 1; min-width: 140px; }
+        .btn-preview:hover { background: #444; }
         
-        /* Theme Selector */
         .themes { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
-        .theme { width: 60px; height: 40px; border-radius: 6px; cursor: pointer; border: 2px solid transparent; }
-        .theme.selected { border-color: #f59e0b; }
+        .theme { width: 50px; height: 36px; border-radius: 6px; cursor: pointer; border: 2px solid transparent; transition: all 0.2s; position: relative; overflow: hidden; }
+        .theme.selected { border-color: #f59e0b; transform: scale(1.1); }
+        .theme::after { content: attr(data-name); position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%); font-size: 0.55rem; color: rgba(0,0,0,0.7); font-weight: 600; text-transform: capitalize; }
+        .theme-light { background: linear-gradient(135deg, #fff 50%, #f3f4f6 50%); }
+        .theme-dark { background: linear-gradient(135deg, #1a1a1a 50%, #2d2d2d 50%); border: 1px solid #444; }
+        .theme-dark::after { color: rgba(255,255,255,0.8); }
+        .theme-coffee { background: linear-gradient(135deg, #3d2914 50%, #5c3d1e 50%); }
+        .theme-ocean { background: linear-gradient(135deg, #0a2342 50%, #1e3a5f 50%); }
+        .theme-forest { background: linear-gradient(135deg, #1a2e1a 50%, #2d4a2d 50%); }
+        .theme-sunset { background: linear-gradient(135deg, #2d1f1f 50%, #4a3232 50%); }
+        .theme-rustic { background: linear-gradient(135deg, #78350f 50%, #92400e 50%); }
         
-        .toast { position: fixed; bottom: 20px; right: 20px; background: #f59e0b; color: #000; padding: 12px 24px; border-radius: 10px; font-weight: 600; transform: translateY(100px); opacity: 0; transition: all 0.3s; }
+        .toast { position: fixed; bottom: 20px; right: 20px; background: #f59e0b; color: #000; padding: 14px 24px; border-radius: 12px; font-weight: 600; transform: translateY(100px); opacity: 0; transition: all 0.3s; z-index: 1000; box-shadow: 0 4px 20px rgba(245, 158, 11, 0.3); }
         .toast.show { transform: translateY(0); opacity: 1; }
         
-        footer { text-align: center; padding: 20px; color: #666; font-size: 0.85rem; }
+        footer { text-align: center; padding: 24px; color: #666; font-size: 0.85rem; }
         footer a { color: #f59e0b; text-decoration: none; }
         
-        /* Themes CSS */
-        .theme-light { background: #fff; color: #000; }
-        .theme-dark { background: #1a1a1a; color: #fff; }
-        .theme-coffee { background: #3d2914; color: #f5deb3; }
-        .theme-ocean { background: #0a2342; color: #e0f2fe; }
-        .theme-forest { background: #1a2e1a; color: #86efac; }
-        .theme-sunset { background: #2d1f1f; color: #fcd34d; }
+        @media print {
+            body { background: #fff; padding: 0; }
+            .container { max-width: 100%; }
+            .no-print { display: none !important; }
+            .print-only { display: block !important; }
+            .preview-menu { box-shadow: none; border: 1px solid #ddd; }
+        }
+        
+        .print-only { display: none; }
+        
+        @media (max-width: 480px) {
+            body { padding: 12px; }
+            h1 { font-size: 1.8rem; }
+            .section { padding: 16px; }
+            .category-header { flex-direction: column; align-items: stretch; }
+            .menu-item-header { flex-direction: column; }
+            .menu-item-price { width: 100%; text-align: left; }
+            .preview-actions { flex-direction: column; }
+            .btn-preview { width: 100%; }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
             <h1>🍽️ MenuMaker</h1>
-            <p class="tagline">Create beautiful digital menus for your food truck or restaurant. <span class="brand">Free:</span> 1 menu, 10 items</p>
+            <p class="tagline">Create beautiful digital menus for your food truck. <span class="brand">Free:</span> 1 menu, 15 items</p>
             <p style="color: #4ade80; font-size: 0.9rem; margin-top: 8px; font-weight: 500;">✓ No app needed · ✓ Share via link or QR code · ✓ Works on any phone</p>
         </header>
         
-        <div class="pro-banner" style="padding: 16px 24px; font-size: 1.05rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px;" onclick="window.open('https://buy.stripe.com/14A14naCN7RT3QT45W8EM07', '_blank')">
-            🚀 <span>Pro: $3/month</span> — Unlimited items · Photos · Custom background
-            <span style="background: #000; color: #f59e0b; padding: 6px 16px; border-radius: 8px; font-weight: 700; margin-left: 8px;">Upgrade Now →</span>
+        <div class="pro-banner no-print" onclick="window.open('https://buy.stripe.com/14A14naCN7RT3QT45W8EM07', '_blank')">
+            🚀 <span>Pro: $3/month</span> — Unlimited items · Photos · Custom background · Remove branding
         </div>
         
         <form id="menuForm">
-            <div class="section">
-                <h2>Restaurant Info</h2>
+            <div class="section no-print">
+                <h2>🏪 Restaurant Info</h2>
                 <div class="field">
                     <label>Restaurant Name</label>
-                    <input type="text" id="restaurantName" placeholder="Joe's Pizza">
+                    <input type="text" id="restaurantName" placeholder="Joe's Tacos" value="">
                 </div>
                 <div class="field">
                     <label>Tagline (optional)</label>
-                    <input type="text" id="tagline" placeholder="Authentic Italian Pizza">
+                    <input type="text" id="tagline" placeholder="Authentic street tacos">
                 </div>
                 <div class="field">
                     <label>Theme</label>
                     <div class="themes">
-                        <div class="theme theme-light selected" data-theme="light" onclick="selectTheme(this)"></div>
-                        <div class="theme theme-dark" data-theme="dark" onclick="selectTheme(this)"></div>
-                        <div class="theme theme-coffee" data-theme="coffee" onclick="selectTheme(this)"></div>
-                        <div class="theme theme-ocean" data-theme="ocean" onclick="selectTheme(this)"></div>
-                        <div class="theme theme-forest" data-theme="forest" onclick="selectTheme(this)"></div>
-                        <div class="theme theme-sunset" data-theme="sunset" onclick="selectTheme(this)"></div>
+                        <div class="theme theme-light selected" data-theme="light" data-name="Light" onclick="selectTheme(this)"></div>
+                        <div class="theme theme-dark" data-theme="dark" data-name="Dark" onclick="selectTheme(this)"></div>
+                        <div class="theme theme-coffee" data-theme="coffee" data-name="Coffee" onclick="selectTheme(this)"></div>
+                        <div class="theme theme-ocean" data-theme="ocean" data-name="Ocean" onclick="selectTheme(this)"></div>
+                        <div class="theme theme-forest" data-theme="forest" data-name="Forest" onclick="selectTheme(this)"></div>
+                        <div class="theme theme-sunset" data-theme="sunset" data-name="Sunset" onclick="selectTheme(this)"></div>
+                        <div class="theme theme-rustic" data-theme="rustic" data-name="Rustic" onclick="selectTheme(this)"></div>
                     </div>
                 </div>
             </div>
             
-            <div class="section" id="categoriesSection">
-                <h2>Menu Categories & Items</h2>
+            <div class="section no-print" id="categoriesSection">
+                <h2>📋 Menu Categories & Items</h2>
                 <div id="categories">
                     <div class="category" data-cat="0">
                         <div class="category-header">
-                            <input type="text" class="category-title-input" placeholder="Category Name" value="Appetizers" style="font-weight: 600; font-size: 1.1rem; width: 200px;">
-                            <button type="button" class="btn btn-remove btn-sm" onclick="removeCategory(this)">Remove</button>
+                            <input type="text" class="category-title-input" placeholder="Category Name" value="Popular Items">
+                            <button type="button" class="btn btn-remove btn-sm" onclick="removeCategory(this)">🗑️ Remove</button>
                         </div>
                         <div class="menu-items" id="cat-0-items">
                             <div class="menu-item">
                                 <div class="menu-item-header">
-                                    <input type="text" class="menu-item-name" placeholder="Item Name" value="Bruschetta">
-                                    <input type="text" class="menu-item-price" placeholder="$0.00" value="$8.00" style="width: 80px; text-align: right;">
+                                    <input type="text" class="menu-item-name" placeholder="Item Name" value="Street Tacos (3)">
+                                    <input type="text" class="menu-item-price" placeholder="$0.00" value="$8.00">
                                 </div>
-                                <input type="text" class="menu-item-desc" placeholder="Description (optional)" value="Toasted bread with fresh tomatoes and basil">
+                                <input type="text" class="menu-item-desc" placeholder="Description (optional)" value="Choice of carne asada, carnitas, or chicken">
+                            </div>
+                            <div class="menu-item">
+                                <div class="menu-item-header">
+                                    <input type="text" class="menu-item-name" placeholder="Item Name" value="Burrito Bowl">
+                                    <input type="text" class="menu-item-price" placeholder="$0.00" value="$12.00">
+                                </div>
+                                <input type="text" class="menu-item-desc" placeholder="Description (optional)" value="Rice, beans, protein, toppings, salsa">
                             </div>
                         </div>
                         <button type="button" class="btn btn-add btn-sm" onclick="addMenuItem(0)">+ Add Item</button>
@@ -146,40 +185,86 @@
                 <button type="button" class="btn btn-add" onclick="addCategory()">+ Add Category</button>
             </div>
             
-            <button type="button" class="btn btn-primary" onclick="generateMenu()">Generate Menu</button>
+            <button type="button" class="btn btn-primary no-print" onclick="generateMenu()">✨ Generate Menu</button>
         </form>
         
         <div class="menu-preview" id="menuPreview">
-            <div class="preview-menu" id="previewContent">
-                <!-- Preview rendered here -->
-            </div>
-            <div class="preview-actions">
+            <div class="preview-menu" id="previewContent"></div>
+            <div class="preview-actions no-print">
                 <button class="btn btn-preview" onclick="shareMenuLink()">🔗 Copy Link</button>
-                <button class="btn btn-preview" onclick="window.print()">📄 Print</button>
+                <button class="btn btn-preview" onclick="generateQRCode()">📱 QR Code</button>
+                <button class="btn btn-preview" onclick="printMenu()">🖨️ Print</button>
             </div>
-            <p style="text-align: center; margin-top: 20px; color: #666; font-size: 0.85rem;">Created with MenuMaker</p>
+            <p style="text-align: center; margin-top: 20px; color: #666; font-size: 0.85rem;" class="branding">Created with MenuMaker</p>
         </div>
         
-        <div style="background: #1a1a1a; border-radius: 16px; padding: 24px; margin-top: 30px; text-align: center;">
-            <h3 style="margin-bottom: 8px;">Need more than 10 items?</h3>
-            <p style="color: #888; margin-bottom: 16px;">Get MenuMaker Pro — unlimited items, add photos, custom backgrounds, and remove branding for just $3/month.</p>
+        <!-- QR Code Modal -->
+        <div id="qrModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:1000; align-items:center; justify-content:center;" onclick="closeQRModal(event)">
+            <div style="background:#1a1a1a; padding:30px; border-radius:16px; max-width:400px; width:90%; text-align:center;" onclick="event.stopPropagation()">
+                <h3 style="margin-bottom:16px;">Print This QR Code</h3>
+                <div id="qrContainer" style="background:#fff; padding:16px; border-radius:8px; display:inline-block; margin-bottom:16px;"></div>
+                <p style="color:#888; font-size:0.9rem; margin-bottom:20px;">Customers scan to view your menu</p>
+                <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+                    <button class="btn btn-primary" style="width:auto; margin:0;" onclick="printQRCode()">🖨️ Print QR</button>
+                    <button class="btn btn-preview" style="width:auto; margin:0;" onclick="document.getElementById('qrModal').style.display='none'">Close</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section no-print" style="background: linear-gradient(135deg, #1a2e1a 0%, #0f1f0f 100%); border: 1px solid #2d4a2d;">
+            <h3 style="margin-bottom: 8px; color: #86efac;">💡 Pro Tips</h3>
+            <ul style="color: #888; font-size: 0.9rem; list-style: none; line-height: 1.8;">
+                <li>✓ Keep item names short and catchy</li>
+                <li>✓ Add brief descriptions - they help upsell</li>
+                <li>✓ Price competitively for your area</li>
+                <li>✓ Print the QR code and tape it to your truck</li>
+            </ul>
+        </div>
+        
+        <div class="section no-print">
+            <h3 style="margin-bottom: 8px;">Need more than 15 items?</h3>
+            <p style="color: #888; margin-bottom: 16px;">Get MenuMaker Pro — unlimited items, add photos, custom backgrounds, remove branding, and more for just $3/month.</p>
             <a href="https://buy.stripe.com/14A14naCN7RT3QT45W8EM07" target="_blank" class="btn btn-primary" style="display: inline-block; text-decoration: none; width: auto; padding: 14px 40px;">Upgrade to Pro →</a>
         </div>
         
-        <footer>
+        <footer class="no-print">
             <p>Built by <a href="https://tcby04.github.io/curtis-tech/" target="_blank">Curtis Tech</a> · Made for food trucks & small restaurants</p>
         </footer>
     </div>
     
     <div class="toast" id="toast">Link copied!</div>
     
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    
     <script>
         let selectedTheme = 'light';
+        let currentMenuUrl = '';
         
-        // Load from URL
         const params = new URLSearchParams(window.location.search);
         if (params.has('menu')) {
             showSharedMenu(params.get('menu'));
+        }
+        
+        const savedMenu = localStorage.getItem('menuMakerLast');
+        if (savedMenu && !params.has('menu')) {
+            try {
+                const data = JSON.parse(savedMenu);
+                document.getElementById('restaurantName').value = data.name || '';
+                document.getElementById('tagline').value = data.tagline || '';
+                if (data.theme) {
+                    selectedTheme = data.theme;
+                    document.querySelectorAll('.theme').forEach(t => {
+                        t.classList.toggle('selected', t.dataset.theme === selectedTheme);
+                    });
+                }
+                if (data.categories && data.categories.length) {
+                    const catContainer = document.getElementById('categories');
+                    catContainer.innerHTML = '';
+                    data.categories.forEach((cat, idx) => {
+                        addCategory(cat.name, cat.items);
+                    });
+                }
+            } catch(e) {}
         }
         
         function selectTheme(el) {
@@ -188,33 +273,54 @@
             selectedTheme = el.dataset.theme;
         }
         
-        function addCategory() {
-            const id = Date.now();
+        function addCategory(name = '', items = []) {
+            const id = Date.now() + Math.random();
             const div = document.createElement('div');
             div.className = 'category';
             div.dataset.cat = id;
+            
+            let itemsHtml = items.length ? items.map(item => `
+                <div class="menu-item">
+                    <div class="menu-item-header">
+                        <input type="text" class="menu-item-name" placeholder="Item Name" value="${escapeHtml(item.name)}">
+                        <input type="text" class="menu-item-price" placeholder="$0.00" value="${escapeHtml(item.price)}">
+                    </div>
+                    <input type="text" class="menu-item-desc" placeholder="Description (optional)" value="${escapeHtml(item.desc || '')}">
+                </div>
+            `).join('') : `
+                <div class="menu-item">
+                    <div class="menu-item-header">
+                        <input type="text" class="menu-item-name" placeholder="Item Name">
+                        <input type="text" class="menu-item-price" placeholder="$0.00">
+                    </div>
+                    <input type="text" class="menu-item-desc" placeholder="Description (optional)">
+                </div>
+            `;
+            
             div.innerHTML = `
                 <div class="category-header">
-                    <input type="text" class="category-title-input" placeholder="Category Name" style="font-weight: 600; font-size: 1.1rem; width: 200px;">
-                    <button type="button" class="btn btn-remove btn-sm" onclick="removeCategory(this)">Remove</button>
+                    <input type="text" class="category-title-input" placeholder="Category Name" value="${escapeHtml(name)}" style="font-weight: 600; font-size: 1.1rem;">
+                    <button type="button" class="btn btn-remove btn-sm" onclick="removeCategory(this)">🗑️ Remove</button>
                 </div>
                 <div class="menu-items" id="cat-${id}-items">
-                    <div class="menu-item">
-                        <div class="menu-item-header">
-                            <input type="text" class="menu-item-name" placeholder="Item Name">
-                            <input type="text" class="menu-item-price" placeholder="$0.00" style="width: 80px; text-align: right;">
-                        </div>
-                        <input type="text" class="menu-item-desc" placeholder="Description (optional)">
-                    </div>
+                    ${itemsHtml}
                 </div>
                 <button type="button" class="btn btn-add btn-sm" onclick="addMenuItem(${id})">+ Add Item</button>
             `;
             document.getElementById('categories').appendChild(div);
         }
         
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
         function removeCategory(btn) {
             if (document.querySelectorAll('.category').length > 1) {
                 btn.closest('.category').remove();
+            } else {
+                showToast('Need at least one category');
             }
         }
         
@@ -225,14 +331,14 @@
             div.innerHTML = `
                 <div class="menu-item-header">
                     <input type="text" class="menu-item-name" placeholder="Item Name">
-                    <input type="text" class="menu-item-price" placeholder="$0.00" style="width: 80px; text-align: right;">
+                    <input type="text" class="menu-item-price" placeholder="$0.00">
                 </div>
                 <input type="text" class="menu-item-desc" placeholder="Description (optional)">
             `;
             container.appendChild(div);
         }
         
-        function generateMenu() {
+        function getMenuData() {
             const name = document.getElementById('restaurantName').value || 'My Restaurant';
             const tagline = document.getElementById('tagline').value;
             
@@ -249,31 +355,36 @@
                 if (catName && items.length) categories.push({ name: catName, items });
             });
             
-            const menuData = { name, tagline, theme: selectedTheme, categories };
+            return { name, tagline, theme: selectedTheme, categories };
+        }
+        
+        function generateMenu() {
+            const menuData = getMenuData();
             
             const themeColors = {
-                light: { bg: '#fff', text: '#000', accent: '#f59e0b' },
-                dark: { bg: '#1a1a1a', text: '#fff', accent: '#f59e0b' },
-                coffee: { bg: '#3d2914', text: '#f5deb3', accent: '#d4a574' },
-                ocean: { bg: '#0a2342', text: '#e0f2fe', accent: '#38bdf8' },
-                forest: { bg: '#1a2e1a', text: '#86efac', accent: '#4ade80' },
-                sunset: { bg: '#2d1f1f', text: '#fcd34d', accent: '#f97316' }
+                light: { bg: '#ffffff', text: '#111827', accent: '#f59e0b', subtle: '#6b7280', border: '#e5e7eb' },
+                dark: { bg: '#1a1a1a', text: '#f9fafb', accent: '#f59e0b', subtle: '#9ca3af', border: '#374151' },
+                coffee: { bg: '#3d2914', text: '#f5deb3', accent: '#d4a574', subtle: '#a67c52', border: '#5c3d1e' },
+                ocean: { bg: '#0a2342', text: '#e0f2fe', accent: '#38bdf8', subtle: '#7dd3fc', border: '#1e3a5f' },
+                forest: { bg: '#1a2e1a', text: '#86efac', accent: '#4ade80', subtle: '#4ade80', border: '#2d4a2d' },
+                sunset: { bg: '#2d1f1f', text: '#fcd34d', accent: '#f97316', subtle: '#fbbf24', border: '#4a3232' },
+                rustic: { bg: '#78350f', text: '#fef3c7', accent: '#f59e0b', subtle: '#d97706', border: '#92400e' }
             };
-            const colors = themeColors[selectedTheme];
+            const colors = themeColors[selectedTheme] || themeColors.light;
             
             const html = `
-                <h2>${name}</h2>
-                ${tagline ? `<p class="preview-subtitle">${tagline}</p>` : ''}
-                ${categories.map(cat => `
+                <h2 style="color: ${colors.text};">${escapeHtml(menuData.name)}</h2>
+                ${menuData.tagline ? `<p class="preview-subtitle" style="color: ${colors.subtle};">${escapeHtml(menuData.tagline)}</p>` : ''}
+                ${menuData.categories.map(cat => `
                     <div class="preview-category">
-                        <h3>${cat.name}</h3>
+                        <h3 style="color: ${colors.text}; border-color: ${colors.accent};">${escapeHtml(cat.name)}</h3>
                         ${cat.items.map(item => `
                             <div class="preview-item">
                                 <div>
-                                    <div class="preview-item-name">${item.name}</div>
-                                    ${item.desc ? `<div class="preview-item-desc">${item.desc}</div>` : ''}
+                                    <div class="preview-item-name" style="color: ${colors.text};">${escapeHtml(item.name)}</div>
+                                    ${item.desc ? `<div class="preview-item-desc">${escapeHtml(item.desc)}</div>` : ''}
                                 </div>
-                                <div class="preview-item-price">${item.price}</div>
+                                <div class="preview-item-price" style="color: ${colors.accent};">${escapeHtml(item.price)}</div>
                             </div>
                         `).join('')}
                     </div>
@@ -284,78 +395,145 @@
             preview.innerHTML = html;
             preview.style.background = colors.bg;
             preview.style.color = colors.text;
-            preview.querySelectorAll('h3').forEach(h => h.style.borderColor = colors.accent);
-            preview.querySelectorAll('.preview-item-price').forEach(p => p.style.color = colors.accent);
             
             document.getElementById('menuPreview').classList.add('visible');
             document.getElementById('menuPreview').scrollIntoView({ behavior: 'smooth' });
             
-            // Save to localStorage
             localStorage.setItem('menuMakerLast', JSON.stringify(menuData));
         }
         
         function shareMenuLink() {
-            const name = document.getElementById('restaurantName').value || 'My Restaurant';
-            const tagline = document.getElementById('tagline').value;
-            
-            const categories = [];
-            document.querySelectorAll('.category').forEach(cat => {
-                const catName = cat.querySelector('.category-title-input').value;
-                const items = [];
-                cat.querySelectorAll('.menu-item').forEach(item => {
-                    const itemName = item.querySelector('.menu-item-name').value;
-                    const itemPrice = item.querySelector('.menu-item-price').value;
-                    const itemDesc = item.querySelector('.menu-item-desc').value;
-                    if (itemName) items.push({ name: itemName, price: itemPrice, desc: itemDesc });
-                });
-                if (catName && items.length) categories.push({ name: catName, items });
-            });
-            
-            const menuData = { name, tagline, theme: selectedTheme, categories };
+            const menuData = getMenuData();
             const encoded = btoa(JSON.stringify(menuData));
             const url = window.location.origin + window.location.pathname + '?menu=' + encoded;
+            currentMenuUrl = url;
             
-            navigator.clipboard.writeText(url).then(() => showToast('Link copied!'));
+            document.querySelector('meta[property="og:title"]').content = `${menuData.name} - Menu`;
+            document.querySelector('meta[property="og:description"]').content = menuData.tagline || `Check out our menu at ${menuData.name}`;
+            
+            navigator.clipboard.writeText(url).then(() => showToast('Link copied to clipboard!'));
+        }
+        
+        function generateQRCode() {
+            const menuData = getMenuData();
+            const encoded = btoa(JSON.stringify(menuData));
+            const url = window.location.origin + window.location.pathname + '?menu=' + encoded;
+            currentMenuUrl = url;
+            
+            const qrContainer = document.getElementById('qrContainer');
+            qrContainer.innerHTML = '';
+            
+            QRCode.toCanvas(document.createElement('canvas'), url, { 
+                width: 200,
+                margin: 2,
+                color: { dark: '#000000', light: '#ffffff' }
+            }, function(err, canvas) {
+                if (!err) {
+                    qrContainer.appendChild(canvas);
+                    document.getElementById('qrModal').style.display = 'flex';
+                }
+            });
+        }
+        
+        function closeQRModal(event) {
+            if (event.target.id === 'qrModal') {
+                document.getElementById('qrModal').style.display = 'none';
+            }
+        }
+        
+        function printQRCode() {
+            const menuData = getMenuData();
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>${escapeHtml(menuData.name)} - QR Code</title>
+                    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"><\/script>
+                    <style>
+                        body { font-family: system-ui, sans-serif; text-align: center; padding: 40px; }
+                        .qr-container { display: inline-block; padding: 30px; border: 3px solid #000; border-radius: 12px; }
+                        h1 { margin-bottom: 8px; }
+                        p { color: #666; margin-top: 20px; font-size: 14px; }
+                    </style>
+                </head>
+                <body>
+                    <div class="qr-container">
+                        <h1>${escapeHtml(menuData.name)}</h1>
+                        <div id="qrcode"></div>
+                        <p>📱 Scan to view our menu</p>
+                    </div>
+                    <script>
+                        QRCode.toCanvas(document.createElement('canvas'), "${currentMenuUrl}", { 
+                            width: 180, margin: 2 
+                        }, function(err, canvas) {
+                            document.getElementById('qrcode').appendChild(canvas);
+                        });
+                        setTimeout(() => window.print(), 500);
+                    <\/script>
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+        }
+        
+        function printMenu() {
+            window.print();
         }
         
         function showSharedMenu(encoded) {
             try {
                 const data = JSON.parse(atob(encoded));
+                
+                document.querySelector('meta[property="og:title"]').content = `${data.name} - Menu`;
+                document.querySelector('meta[property="og:description"]').content = data.tagline || `Check out our menu at ${data.name}`;
+                document.title = `${data.name} - Menu`;
+                
                 const themeColors = {
-                    light: { bg: '#fff', text: '#000', accent: '#f59e0b' },
-                    dark: { bg: '#1a1a1a', text: '#fff', accent: '#f59e0b' },
-                    coffee: { bg: '#3d2914', text: '#f5deb3', accent: '#d4a574' },
-                    ocean: { bg: '#0a2342', text: '#e0f2fe', accent: '#38bdf8' },
-                    forest: { bg: '#1a2e1a', text: '#86efac', accent: '#4ade80' },
-                    sunset: { bg: '#2d1f1f', text: '#fcd34d', accent: '#f97316' }
+                    light: { bg: '#ffffff', text: '#111827', accent: '#f59e0b', subtle: '#6b7280', border: '#e5e7eb' },
+                    dark: { bg: '#1a1a1a', text: '#f9fafb', accent: '#f59e0b', subtle: '#9ca3af', border: '#374151' },
+                    coffee: { bg: '#3d2914', text: '#f5deb3', accent: '#d4a574', subtle: '#a67c52', border: '#5c3d1e' },
+                    ocean: { bg: '#0a2342', text: '#e0f2fe', accent: '#38bdf8', subtle: '#7dd3fc', border: '#1e3a5f' },
+                    forest: { bg: '#1a2e1a', text: '#86efac', accent: '#4ade80', subtle: '#86efac', border: '#2d4a2d' },
+                    sunset: { bg: '#2d1f1f', text: '#fcd34d', accent: '#f97316', subtle: '#fbbf24', border: '#4a3232' },
+                    rustic: { bg: '#78350f', text: '#fef3c7', accent: '#f59e0b', subtle: '#d97706', border: '#92400e' }
                 };
                 const colors = themeColors[data.theme] || themeColors.light;
                 
+                // Mobile-first optimized customer view - NO external CSS/JS for speed
                 document.body.innerHTML = `
-                    <div class="container">
-                        <div class="menu-preview visible" style="display: block;">
-                            <div class="preview-menu" style="background: ${colors.bg}; color: ${colors.text};">
-                                <h2>${data.name}</h2>
-                                ${data.tagline ? `<p class="preview-subtitle">${data.tagline}</p>` : ''}
+                    <div class="container" style="max-width: 480px; margin: 0 auto; padding: 16px;">
+                        <div class="preview-menu visible" style="background: ${colors.bg}; color: ${colors.text}; border-radius: 20px; padding: 24px 20px; box-shadow: 0 4px 24px rgba(0,0,0,0.1);">
+                            <h2 style="color: ${colors.text}; font-size: 1.8rem; text-align: center; margin-bottom: 4px;">${escapeHtml(data.name)}</h2>
+                            ${data.tagline ? `<p style="text-align: center; color: ${colors.subtle}; margin-bottom: 24px; font-size: 0.95rem;">${escapeHtml(data.tagline)}</p>` : ''}
+                            
+                            <div style="border-top: 2px solid ${colors.border || colors.accent}; padding-top: 20px;">
                                 ${data.categories.map(cat => `
-                                    <div class="preview-category">
-                                        <h3 style="border-color: ${colors.accent};">${cat.name}</h3>
+                                    <div class="preview-category" style="margin-bottom: 28px;">
+                                        <h3 style="color: ${colors.text}; border-color: ${colors.accent}; font-size: 1.15rem; margin-bottom: 14px;">${escapeHtml(cat.name)}</h3>
                                         ${cat.items.map(item => `
-                                            <div class="preview-item">
-                                                <div>
-                                                    <div class="preview-item-name">${item.name}</div>
-                                                    ${item.desc ? `<div class="preview-item-desc">${item.desc}</div>` : ''}
+                                            <div class="preview-item" style="margin-bottom: 14px; padding: 10px 0; border-bottom: 1px solid ${colors.border || 'rgba(0,0,0,0.1)'};">
+                                                <div style="flex: 1;">
+                                                    <div style="font-weight: 600; font-size: 1.05rem;">${escapeHtml(item.name)}</div>
+                                                    ${item.desc ? `<div style="color: ${colors.subtle}; font-size: 0.9rem; font-style: italic; margin-top: 2px;">${escapeHtml(item.desc)}</div>` : ''}
                                                 </div>
-                                                <div class="preview-item-price" style="color: ${colors.accent};">${item.price}</div>
+                                                <div style="font-weight: 700; color: ${colors.accent}; font-size: 1.05rem; white-space: nowrap;">${escapeHtml(item.price)}</div>
                                             </div>
                                         `).join('')}
                                     </div>
                                 `).join('')}
                             </div>
-                            <p style="text-align: center; margin-top: 20px; color: #666; font-size: 0.85rem;">Created with MenuMaker</p>
                         </div>
+                        <p style="text-align: center; margin-top: 24px; color: #999; font-size: 0.8rem;">Created with <a href="https://tcby04.github.io/menu-maker/" style="color: ${colors.accent}; text-decoration: none;">MenuMaker</a></p>
                     </div>
                 `;
+                
+                // Add mobile-optimized meta viewport
+                const meta = document.createElement('meta');
+                meta.name = 'viewport';
+                meta.content = 'width=device-width, initial-scale=1.0, maximum-scale=3.0, user-scalable=yes';
+                document.head.appendChild(meta);
+                
             } catch(e) {
                 alert('Invalid menu link');
             }
@@ -365,12 +543,11 @@
             const t = document.getElementById('toast');
             t.textContent = msg;
             t.classList.add('show');
-            setTimeout(() => t.classList.remove('show'), 2000);
+            setTimeout(() => t.classList.remove('show'), 2500);
         }
     </script>
     
     <script>
-    // Check for upgrade success - auto-unlock Pro
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('upgraded') === 'true') {
         localStorage.setItem('menuMakerPro', 'true');
